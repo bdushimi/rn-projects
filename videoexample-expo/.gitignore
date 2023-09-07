@@ -33,3 +33,44 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+
+
+# macOS
+.DS_Store
+
+# Node.js
+node_modules/
+
+# iOS
+ios/Pods/
+ios/Podfile.lock
+ios/Podfile.lock.backup
+ios/Pods.xcodeproj/
+ios/build/
+ios/DerivedData/
+ios/*.gz
+
+# Android
+android/app/build/
+android/build/
+android/gradle/
+android/local.properties
+android/.gradle
+android/captures/
+
+# Logs
+*.log
+
+# Dependency directories
+pnpify/
+.yarn/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
