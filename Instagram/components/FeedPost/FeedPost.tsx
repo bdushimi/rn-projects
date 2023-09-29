@@ -7,7 +7,7 @@ import Colors from '@theme/colors';
 import fonts from '@theme/fonts';
 
 
-export default function App() {
+export default function FeedPost() {
   return (
     <View style={styles.post}>
       <View style={styles.header}>
