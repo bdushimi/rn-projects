@@ -14,8 +14,8 @@ export interface IPost {
 export interface IUser {
   id: string;
   username: string;
+  name?: string;
   image?: string;
-  name: string;
   bio?: string;
   posts?: IPost[];
   website?: string;

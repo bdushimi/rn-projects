@@ -7,7 +7,7 @@ export default function HomeScreen() {
         <View style={styles.application}>
             <FlatList
                 data={posts}
-                renderItem={({ item, index }) => <FeedPost post={item} />}
+                renderItem={({ item }) => <FeedPost post={item} />}
                 showsVerticalScrollIndicator={false}
             />
         </View>

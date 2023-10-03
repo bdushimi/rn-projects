@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
@@ -7,10 +7,68 @@ import Colors from "@theme/colors";
 import fonts from "@theme/fonts";
 import styles from "./style";
 import Comment from "@components/Comment";
-import { IPost, IUser, IComment } from '@types/models';
+import { IPost, IUser, IComment } from '@myTypes/models';
+import { useState } from "react";
+import DoublePressable from "@components/DoublePressable";
+import Carousel from "@components/Carousel";
 
 
-export default function FeedPost({ post }: IPost) {
+interface IFeedPost {
+  post: IPost
+}
+
+
+export default function FeedPost({ post }: IFeedPost) {
+
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
+  const [pressCount, setPressCount] = useState(0);
+
+  const doublePressThreshold = 300;
+  let lastPressTime = 0;
+  let imageContent = null
+
+
+  const toggleDescriptionExpanded = () => {
+    setIsDescriptionExpanded((prevState) => !prevState)
+  }
+
+  const toggleLike = () => {
+    setIsLiked(prevState => !prevState)
+  }
+
+
+  const handleDoublePress = () => {
+    const currentTime = new Date().getTime();
+    if (currentTime - lastPressTime <= doublePressThreshold) {
+      setPressCount(pressCount + 1);
+      lastPressTime = 0;
+      toggleLike()
+    } else {
+      // Single press detected
+      lastPressTime = currentTime;
+    }
+  };
+
+
+  if (post.image) {
+    imageContent = (
+      <DoublePressable onDoublePress={toggleLike}>
+        <Image
+          source={{
+            uri: post.image,
+          }}
+          style={styles.image}
+        />
+      </DoublePressable>
+      
+    )
+  } else if (post.images) {
+    imageContent = <Carousel images={post.images} onDoublePress={toggleLike} />
+  }
+
+
+
   return (
     <View style={styles.post}>
       <View style={styles.header}>
@@ -27,20 +85,17 @@ export default function FeedPost({ post }: IPost) {
           style={styles.threeDots}
         />
       </View>
-      <Image
-        source={{
-          uri: post.image,
-        }}
-        style={styles.image}
-      />
+        {imageContent}
       <View style={styles.footer}>
         <View style={styles.iconContainer}>
-          <AntDesign
-            name={"hearto"}
-            size={24}
-            style={styles.icon}
-            color={Colors.black}
-          />
+          <Pressable onPress={toggleLike}>
+            <AntDesign
+              name={isLiked ? 'heart' : "hearto"}
+              size={24}
+              style={styles.icon}
+              color={isLiked ? Colors.accent : Colors.black}
+            />
+          </Pressable>
           <Ionicons
             name="chatbubble-outline"
             size={24}
@@ -66,12 +121,15 @@ export default function FeedPost({ post }: IPost) {
           and <Text>{post.nofLikes}</Text>
           <Text> others</Text>{" "}
         </Text>
-        <Text>
+        <Text numberOfLines={isDescriptionExpanded ? 0 : 2}>
           <Text style={{ fontWeight: fonts.weight.bold }}>
             {post.user.username}
           </Text>
           {"   "}
           {post.description}
+        </Text>
+        <Text onPress={toggleDescriptionExpanded}>
+          {isDescriptionExpanded ? 'Less' : 'More'}
         </Text>
         <Text style={styles.heading4}>
           View all {post.nofComments} Comments
