@@ -11,14 +11,16 @@ import { IPost, IUser, IComment } from '@myTypes/models';
 import { useState } from "react";
 import DoublePressable from "@components/DoublePressable";
 import Carousel from "@components/Carousel";
+import VideoPlayer from "@components/VideoPlayer";
 
 
 interface IFeedPost {
   post: IPost
+  isVisible: boolean
 }
 
 
-export default function FeedPost({ post }: IFeedPost) {
+export default function FeedPost({ post , isVisible}: IFeedPost) {
 
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
@@ -26,7 +28,7 @@ export default function FeedPost({ post }: IFeedPost) {
 
   const doublePressThreshold = 300;
   let lastPressTime = 0;
-  let imageContent = null
+  let postContent = null
 
 
   const toggleDescriptionExpanded = () => {
@@ -52,7 +54,7 @@ export default function FeedPost({ post }: IFeedPost) {
 
 
   if (post.image) {
-    imageContent = (
+    postContent = (
       <DoublePressable onDoublePress={toggleLike}>
         <Image
           source={{
@@ -61,10 +63,16 @@ export default function FeedPost({ post }: IFeedPost) {
           style={styles.image}
         />
       </DoublePressable>
-      
+
     )
   } else if (post.images) {
-    imageContent = <Carousel images={post.images} onDoublePress={toggleLike} />
+    postContent = <Carousel images={post.images} onDoublePress={toggleLike} />
+  } else if (post.video) {
+    postContent = (
+      <DoublePressable>
+        <VideoPlayer uri={post.video} paused={!isVisible} />
+      </DoublePressable>
+    )
   }
 
 
@@ -85,7 +93,7 @@ export default function FeedPost({ post }: IFeedPost) {
           style={styles.threeDots}
         />
       </View>
-        {imageContent}
+      {postContent}
       <View style={styles.footer}>
         <View style={styles.iconContainer}>
           <Pressable onPress={toggleLike}>
