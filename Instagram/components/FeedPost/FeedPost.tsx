@@ -1,17 +1,14 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
-import Entypo from "@expo/vector-icons/Entypo";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Feather from "@expo/vector-icons/Feather";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import Carousel from "@components/Carousel";
+import Comment from "@components/Comment";
+import DoublePressable from "@components/DoublePressable";
+import VideoPlayer from "@components/VideoPlayer";
+import { AntDesign, Entypo, Feather, Ionicons } from "@expo/vector-icons";
+import { IComment, IPost } from '@myTypes/models';
 import Colors from "@theme/colors";
 import fonts from "@theme/fonts";
-import styles from "./style";
-import Comment from "@components/Comment";
-import { IPost, IUser, IComment } from '@myTypes/models';
 import { useState } from "react";
-import DoublePressable from "@components/DoublePressable";
-import Carousel from "@components/Carousel";
-import VideoPlayer from "@components/VideoPlayer";
+import { Image, Pressable, Text, View } from "react-native";
+import styles from "./style";
 
 
 interface IFeedPost {
@@ -143,7 +140,7 @@ export default function FeedPost({ post , isVisible}: IFeedPost) {
           View all {post.nofComments} Comments
         </Text>
         {post.comments.map((comment: IComment) => (
-          <Comment comment={comment} key={comment.id} />
+          <Comment comment={comment} key={comment.id} includeDetails />
         ))}
         <Text style={styles.heading4}>{post.createdAt}</Text>
       </View>

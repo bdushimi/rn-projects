@@ -1,4 +1,4 @@
-import AntDesign from "@expo/vector-icons/AntDesign";
+import { AntDesign } from "@expo/vector-icons";
 import Colors from "@theme/colors";
 import fonts from "@theme/fonts";
 import { Image, Text, View, Pressable } from "react-native";

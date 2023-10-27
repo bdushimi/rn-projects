@@ -21,6 +21,9 @@ export interface IUser {
   website?: string;
 }
 
+export type IEditableUserField = "name" | "username" | "website" | "bio";
+export type IEditableUser = Pick<IUser, IEditableUserField>;
+
 export interface IComment {
   id: string;
   comment: string;

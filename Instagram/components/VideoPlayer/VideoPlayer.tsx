@@ -1,9 +1,9 @@
-import { View, Text, Button, Pressable, TouchableOpacity } from 'react-native'
-import { Video, ResizeMode } from 'expo-av';
-import { useRef, useState, useEffect } from 'react'
-import Ionicons from "@expo/vector-icons/Ionicons";
-import styles from './styles';
+import { Ionicons } from "@expo/vector-icons";
 import Colors from '@theme/colors';
+import { ResizeMode, Video } from 'expo-av';
+import { useEffect, useRef, useState } from 'react';
+import { Pressable, TouchableOpacity, View } from 'react-native';
+import styles from './styles';
 
 
 interface IVideoPlayer {

@@ -1,7 +1,7 @@
 import FeedPost from '@components/FeedPost';
 import posts from '@data/posts.json';
 import { useRef, useState } from 'react';
-import { FlatList, StyleSheet, View, ViewToken, ViewabilityConfig } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, View, ViewToken, ViewabilityConfig } from 'react-native';
 
 export default function HomeScreen() {
 
@@ -15,23 +15,24 @@ export default function HomeScreen() {
             setActivePostId(viewableItems[0].item.id)
         }
     })
-    
+
     return (
-        <View style={styles.application}>
-            <FlatList
-                data={posts}
-                renderItem={({ item }) => <FeedPost post={item} isVisible={ activePostId === item.id} />}
-                showsVerticalScrollIndicator={false}
-                onViewableItemsChanged={onViewableItemsChanged.current}
-                viewabilityConfig={viewabilityConfig}
-            />
-        </View>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.application}>
+                <FlatList
+                    data={posts}
+                    renderItem={({ item }) => <FeedPost post={item} isVisible={activePostId === item.id} />}
+                    showsVerticalScrollIndicator={false}
+                    onViewableItemsChanged={onViewableItemsChanged.current}
+                    viewabilityConfig={viewabilityConfig}
+                />
+            </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     application: {
         flex: 1,
-        paddingTop: 20
     },
 });
