@@ -1,15 +1,21 @@
 import CustomInput from "@components/CustomInput"
 import user from "@data/user.json"
+import { IEditableUser } from "@myTypes/models"
 import Colors from "@theme/colors"
 import fonts from "@theme/fonts"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import { useForm, Controller } from "react-hook-form"
-import { IEditableUser } from "@myTypes/models"
+import * as ImagePicker from 'expo-image-picker';
+
 
 const EditProfile = () => {
 
     const REGEX_URL = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/i
-    
+
+
+    const [image, setImage] = useState(null);
+
     const { control, handleSubmit } = useForm<IEditableUser>({
         defaultValues: {
             name: user.name,
@@ -21,11 +27,24 @@ const EditProfile = () => {
         console.log('onSubmit', data)
     }
 
+    const onChangeProfilePicture = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    }
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.page}>
-                <Image source={{ uri: user.image }} style={styles.avatar} />
-                <Text style={styles.textButton}>Change profile photo</Text>
+                <Image source={{ uri: image ? image : user.image }} style={styles.avatar} />
+                <Text style={styles.textButton} onPress={onChangeProfilePicture}>Change profile photo</Text>
                 <CustomInput
                     label="Name"
                     name="name"

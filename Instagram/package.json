@@ -12,6 +12,7 @@
     "@types/react": "~18.2.14",
     "expo": "~49.0.13",
     "expo-av": "~13.4.1",
+    "expo-image-picker": "~14.3.2",
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
     "react-hook-form": "^7.47.0",
