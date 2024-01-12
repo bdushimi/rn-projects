@@ -1,11 +1,12 @@
 import CustomInput from "@components/CustomInput"
 import user from "@data/user.json"
+import GlobalStyles from "@theme/GlobalStyles"
 import { IEditableUser } from "@myTypes/models"
 import Colors from "@theme/colors"
 import fonts from "@theme/fonts"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Image, SafeAreaView, StyleSheet, Text, View, Platform, StatusBar } from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
 
 
@@ -41,7 +42,7 @@ const EditProfile = () => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={GlobalStyles.safeArea}>
             <View style={styles.page}>
                 <Image source={{ uri: image ? image : user.image }} style={styles.avatar} />
                 <Text style={styles.textButton} onPress={onChangeProfilePicture}>Change profile photo</Text>
