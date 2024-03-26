@@ -1,11 +1,31 @@
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native'
-import { useEffect, useState } from 'react'
-import GlobalStyles from '@theme/GlobalStyles'
-import { Camera, CameraType } from 'expo-camera';
+import { MaterialIcons } from "@expo/vector-icons";
+import GlobalStyles from '@theme/GlobalStyles';
+import Colors from '@theme/colors';
+import { Camera, CameraType, FlashMode, CameraPictureOptions } from 'expo-camera';
+import { useEffect, useState, useRef } from 'react';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+
+const flashModes = [
+  FlashMode.off,
+  FlashMode.on,
+  FlashMode.auto,
+  FlashMode.torch
+]
+
+const flashModesIcon = {
+  [FlashMode.off]: "flash-off",
+  [FlashMode.on]: "flash-on",
+  [FlashMode.auto]: "flash-auto",
+  [FlashMode.torch]: "highlight"
+}
 
 const PostUploadScreen = () => {
   const [type, setType] = useState(CameraType.back);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null)
+  const [flash, setFlash] = useState(FlashMode.off)
+  const [isCameraReady, setIsCameraReady] = useState(false)
+
+  const cameraRef = useRef<Camera>(null)
 
 
 
@@ -32,15 +52,57 @@ const PostUploadScreen = () => {
     setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
   }
 
+  const onFlipCameraHandle = () => {
+    setType(currentCameraType => currentCameraType === CameraType.back ? CameraType.front : CameraType.back);
+  }
+
+  const onFlashFlipHandle = () => {
+    let currentFlashIndex = flashModes.indexOf(flash)
+    let nextFlashIndex = currentFlashIndex === flashModes.length - 1 ? 0 : currentFlashIndex + 1
+    setFlash(currentFlashMode => flashModes[nextFlashIndex]);
+  }
+
+  const onTakePictureHandle = async () => {
+    if (!isCameraReady || !cameraRef.current) {
+      return
+    }
+    const options: CameraPictureOptions = {
+      quality: 1,
+      skipProcessing: true
+    }
+    const result = await cameraRef.current.takePictureAsync(options)
+    console.log(result)
+  }
+
+
   return (
     <SafeAreaView style={GlobalStyles.safeArea}>
       <View style={styles.page}>
-        <Camera type={type} style={styles.camera}>
+        <Camera
+          ref={cameraRef}
+          type={type}
+          style={styles.camera}
+          flashMode={flash}
+          onCameraReady={() => setIsCameraReady(true)}
+        >
         </Camera>
-        <View>
-          <TouchableOpacity onPress={toggleCameraType}>
-            <Text>Flip Camera</Text>
-          </TouchableOpacity>
+        <View style={[styles.buttonsContainer, { top: 25 }]}>
+          <MaterialIcons name="close" size={30} color={Colors.white} />
+          <Pressable onPress={onFlashFlipHandle}>
+            <MaterialIcons name={flashModesIcon[flash]} size={30} color={Colors.white} />
+          </Pressable>
+          <MaterialIcons name="settings" size={30} color={Colors.white} />
+        </View>
+        <View style={[styles.buttonsContainer, { bottom: 25 }]}>
+          <MaterialIcons name="photo-library" size={30} color={Colors.white} />
+          {isCameraReady && (
+            <Pressable onPress={onTakePictureHandle}>
+              <View style={styles.circle} />
+            </Pressable>
+          )}
+          <Pressable onPress={onFlipCameraHandle}>
+            <MaterialIcons name="flip-camera-ios" size={30} color={Colors.white} />
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>
@@ -49,11 +111,28 @@ const PostUploadScreen = () => {
 
 const styles = StyleSheet.create({
   page: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: Colors.black
+
   },
   camera: {
     width: '100%',
     aspectRatio: 3 / 4
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: '100%',
+    position: 'absolute'
+  },
+
+  circle: {
+    width: 65,
+    aspectRatio: 1,
+    borderRadius: 65,
+    backgroundColor: Colors.white
   }
 })
 
